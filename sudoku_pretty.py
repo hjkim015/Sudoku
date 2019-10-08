@@ -3,18 +3,49 @@
 
 
 from random import sample 
+import numpy as np
 
 base  = 3  # Will generate any size of random sudoku board in O(n^2) time
 side  = base*base
+'''
 nums  = sample(range(1,side+1),side) # random numbers
 	#This generates a random list of numbers between 1-9 
 	#Translates to sample(range(1,10),9)
-	#This is what the sample function does: 
-	#cannot repeat numbers
-board = [[nums[(base*(r%base)+r//base+c)%side] for c in range(side) ] for r in range(side)]
-rows  = [ r for g in sample(range(base),base) for r in sample(range(g*base,(g+1)*base),base) ] 
-cols  = [ c for g in sample(range(base),base) for c in sample(range(g*base,(g+1)*base),base) ] 
-board = [[board[r][c] for c in cols] for r in rows]
+	#sample cannot repeat numbers
+	#THIS IS THE MASTER LIST OF NUMBERS THAT GIVES PROGRAM RANDOM ABILITY
+
+
+board = [[nums[(base*(r%base)+r//base+c)%side] for c in range(side)] for r in range(side)]
+
+
+	#HOW DOES THE EQUATION GIVE YOU THE SPECIFIC INDEXES BELOW? 	
+	#This gives you the actual board of the sudoko. A list of lists representing a row.
+	#What happens is that the numbers are generated based on an index pattern that fits 
+	#the sudoku pattern below:
+		#|0|1|2|3|4|5|6|7|8|
+		#|3|4|5|6|7|8|0|1|2|
+		#|6|7|8|0|1|2|3|4|5|
+		#|1|2|3|4|5|6|7|8|0|
+		#|4|5|6|7|8|0|1|2|3|
+		#|7|8|0|1|2|3|4|5|6|
+		#|2|3|4|5|6|7|8|0|1|
+		#|5|6|7|8|0|1|2|3|4|
+		#|8|0|1|2|3|4|5|6|7|
+	#BREAKING IT DOWN: print the following code
+		# print("nums", nums)
+		# for r in range(side):
+		# 	print("r", r)
+		# 	for i in board:
+		# 		print("board",i)
+		# 	for c in range(side):
+		# 		print("c", c)
+		# 		print("base",base)
+		# 		print(base*(r%base))
+		# 		print(r//base)
+		# 		print((base*(r%base)+r//base+c))
+		# 		print((base*(r%base)+r//base+c)%side)
+		# 		print("nums[]",nums[(base*(r%base)+r//base+c)%side])
+		# 		raw_input()
 
 
 squares = side*side
@@ -34,32 +65,31 @@ line4  = expandLine("|___|___|___|")
 
 
 
-# #________________________________________________________________________________
-# symbol = " 1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-# nums   = [[""]+[symbol[n] for n in line] for line in board ]
-# nums2   = [[symbol[n] for n in line] for line in board ]
-# 	#what is happening with the "nums" variable: 
-# 		#it takes the board with zeros
-# 		#If n = 0, aka if the program reaches a spot on the board that is zero,
-# 		#it will print [''] 
-# 		#empty space of symbol. Because symbol[n] when n=0 is ''
-# 		#IF n=another number, program will print [ 'another number']
-# 		#BREAKING IT DOWN: print this code to see what's going on in the loop
-# #			print ("board",board)
-# 				# for line in board:
-# 				# 	print("line",line)
-# 				# 	print("")
-# 				# 	for n in line:
-# 				# 		print("n", n)
-# 				# 		print([symbol[n]])
-# 				# 	print("this is nums", nums)
-# 				# 	raw_input()
-# #________________________________________________________________________________
+#________________________________________________________________________________
+symbol = " 1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+nums   = [[""]+[symbol[n] for n in line] for line in board ]
+	#what is happening with the "nums" variable: 
+		#it takes the board with zeros
+		#If n = 0, aka if the program reaches a spot on the board that is zero,
+		#it will print [''] 
+		#empty space of symbol. Because symbol[n] when n=0 is ''
+		#IF n=another number, program will print [ 'another number']
+		#BREAKING IT DOWN: print this code to see what's going on in the loop
+#			print ("board",board)
+				# for line in board:
+				# 	print("line",line)
+				# 	print("")
+				# 	for n in line:
+				# 		print("n", n)
+				# 		print([symbol[n]])
+				# 	print("this is nums", nums)
+				# 	raw_input()
+#________________________________________________________________________________
 
 
-# #in our case r will iterate through the sequence [1,2,3,4,5,6,7,8,9]
-# for r in range(1,side+1):
-# 	print( "".join(n+s for n,s in zip(nums[r-1],line1.split("."))) ) #columns
+#in our case r will iterate through the sequence [1,2,3,4,5,6,7,8,9]
+for r in range(1,side+1):
+	print( "".join(n+s for n,s in zip(nums[r-1],line1.split("."))) ) #columns
 # # 		#WHAT IS HAPPENING: this makes all the numbers of the board appear 
 # # 			#Let's BREAK IT DOWN: print the following code: 
 # # 				# for r in range(1,side+1):
@@ -72,39 +102,118 @@ line4  = expandLine("|___|___|___|")
 # # 				# 	print("joining everything", "".join(n+s for n,s in zipping))
 # # 				# 	raw_input()
 
-# 	print([line2,line3,line4][(r%side==0)+(r%base==0)])
+ 	print([line2,line3,line4][(r%side==0)+(r%base==0)])
 # # 		#WHAT IS HAPPENING:Makes horizontal separators on the board appear 
 # # 		#The modulo here is actually unnesscary. 
 # # 		#if you put print(line2), it yields the same sudoku board
-# # 		#Mod was there becaue the original code had non aSCII symbols 
-# # 			
-# 		#and wanted to control the 3*3 boxes within the sudoku board. 
+# 		#Mod was there becaue the original code had non aSCII symbols 
+# 			
+		#and wanted to control the 3*3 boxes within the sudoku board. 
 
-# 	#TO UNDERSTAND THIS WHOLE ENTIRE FOR LOOP: Joining the "floors",#s, and pipes
-# 	#Run this code to get a better idea of what is going on: 
-# 	#notice how the individual spaces have a height of two pipes, not one. 
-# 	#This occurs because you are stacking lines on top of each other. 
-# 		# for r in range(1,side+1):
-# 		# 	print("row", "".join(n+s for n,s in zip(nums[r-1],line1.split("."))) )
-# 		# 	raw_input()
-# 		# 	print("floor",line2)
-# 		# 	raw_input()
-# 		# 	print("".join(n+s for n,s in zip(nums[r-1],line1.split("."))) )
-# 		# 	print(line2)
-# 		# 	raw_input()
+	#TO UNDERSTAND THIS WHOLE ENTIRE FOR LOOP: Joining the "floors",#s, and pipes
+	#Run this code to get a better idea of what is going on: 
+	#notice how the individual spaces have a height of two pipes, not one. 
+	#This occurs because you are stacking lines on top of each other. 
+		# for r in range(1,side+1):
+		# 	print("row", "".join(n+s for n,s in zip(nums[r-1],line1.split("."))) )
+		# 	raw_input()
+		# 	print("floor",line2)
+		# 	raw_input()
+		# 	print("".join(n+s for n,s in zip(nums[r-1],line1.split("."))) )
+		# 	print(line2)
+		# 	raw_input()
 
 
+'''
 
+
+class sudoku:
+	def __init__(self):
+		
+		#self.board_with_zeros, self.board_true_solution = self.create_board()
+		self.board = np.array([
+ 			 [0,0,1,0,0,0,0,0,0]
+			,[3,0,0,9,0,0,0,0,1]
+			,[9,0,0,0,0,0,0,0,0]
+			,[0,0,0,5,6,0,0,0,0]
+			,[5,6,0,0,0,0,0,0,0]
+			,[0,2,4,0,1,3,5,0,0]
+			,[0,0,5,0,0,7,0,0,0]
+			,[0,0,7,0,0,0,0,0,5]
+			,[0,0,0,0,0,5,6,0,7]])
+		self.initialize_dict()
 
 	
+	#def create_board(self):
+		
+
+	def initialize_dict(self):
+		self.solving_dict = {}
+		
+		for i in range(9):
+			for j in range(9):
+				self.space = self.board[i,j]
+				if self.space == 0:
+					self.solving_dict[(i,j)] = [1,2,3,4,5,6,7,8,9]
+				else:
+					self.solving_dict[(i,j)] = [self.space]
 
 
+	def checkrow(self,i,j):
+		row_nonzero_index = np.where(self.board[i,:]>0)
+		#gives the index location of numbers already in the row
+		#for j in range(9):
+		if self.board[i,j] == 0:
+			for index in range(len(row_nonzero_index[0])):
+				self.solving_dict[(i,j)].remove(self.board[i,row_nonzero_index[0][index]])
+				
+
+		print(self.solving_dict[(i,j)])
+		
+	
+
+	def checkcol(self,i,j):
+		col_nonzero_index = np.where(self.board[:,j]>0)
+		#gives the index location of numers already in the column 
+		#for i in range(9):
+		if self.board[i,j] == 0:
+			for index in range(len(col_nonzero_index[0])):
+				self.solving_dict[(i,j)].remove([self.board[col_nonzero_index[0][index],j]])
 
 
+	def checkbox(self,i,j):
+		a = i/3
+		b = j/3
+		#this gives you the proper indexes for the boxes based on where the space is
+		row_range = range(3*a,3*a+3)
+		col_range = range(3*b,3*b+3)
+		#these ranges give you the proper rows and columns in the box you need to look at. 
+
+		box_nonzero = np.where(self.board[3*a:3*a+3,3*b:3*b+3]>0)
+		
+		
+		if self.board[i,j] == 0:
+			for x in range(len(box_nonzero[0])):
+				self.solving_dict[(i,j)].remove(self.board[box_nonzero[0][x]+3*a,box_nonzero[1][x]+3*b])
+
+		
+	def checkspace(self,i,j):
+		if self.board[i,j] == 0:
+			self.checkbox(i,j)
+			self.checkrow(i)
+			self.checkcol(j)
+		if len(self.solving_dict[(i,j)]) == 1:
+			self.board[i,j] = self.solving_dict[(i,j)][0]
 
 
+	def every_space(self): 
+		for i in range(9):
+			for j in range(9):
+				self.checkspace(i,j)
+
+		print(self.solving_dict)
+			
 
 
-
-
-
+game1 = sudoku()
+game1.checkrow(0,0)
