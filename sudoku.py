@@ -148,9 +148,13 @@ class sudoku:
 		#for j in range(9):
 		if self.board[i,j] == 0:
 			for index in range(len(row_nonzero_index[0])):
+				# print("i,j",[i,j])
+				# print("elimiated list before", self.eliminated_list)
 				self.eliminated_list.append(self.board[i,row_nonzero_index[0][index]])
 				#self.solving_dict[(i,j)].remove(self.board[i,row_nonzero_index[0][index]])
-			
+				# print("row_nonzero",row_nonzero_index)
+				# print("eliminate",self.eliminated_list)
+
 	
 
 	
@@ -161,8 +165,12 @@ class sudoku:
 		#for i in range(9):
 		if self.board[i,j] == 0:
 			for index in range(len(col_nonzero_index[0])):
+				# print("i,j",[i,j])
+				# print("elimiated list before", self.eliminated_list)
 				self.eliminated_list.append(self.board[col_nonzero_index[0][index],j])
 
+				# print("row_col",col_nonzero_index)
+				# print("eliminate",self.eliminated_list)
 		#print(self.solving_dict[(i,j)])
 			#list(dict.fromkeys(self.eliminated_list))
 				#self.solving_dict[(i,j)].remove(self.board[col_nonzero_index[0][index],j])
@@ -177,12 +185,19 @@ class sudoku:
 		row_range = range(3*a,3*a+3)
 		col_range = range(3*b,3*b+3)
 		#these ranges give you the proper rows and columns in the box you need to look at. 
-		box_nonzero = np.where(self.board[3*a:3*a+3,3*b:3*b+3]>0)
+		box_nonzero_index = np.where(self.board[3*a:3*a+3,3*b:3*b+3]>0)
 		
 		
 		if self.board[i,j] == 0:
-			for x in range(len(box_nonzero[0])):
-				self.eliminated_list.append(self.board[box_nonzero[0][x]+3*a,box_nonzero[1][x]+3*b])
+			self.checkrow(i,j)
+			self.checkcol(i,j)
+
+			for x in range(len(box_nonzero_index[0])):
+				# print("i,j",[i,j])
+				# print("elimiated list before", self.eliminated_list)
+				self.eliminated_list.append(self.board[box_nonzero_index[0][x]+3*a,box_nonzero_index[1][x]+3*b])
+				# print("box remove locations",box_nonzero_index)
+				# print("eliminate",self.eliminated_list)
 			#ist(dict.fromkeys(self.eliminated_list))
 				#self.solving_dict[(i,j)].remove(self.board[box_nonzero[0][x]+3*a,box_nonzero[1][x]+3*b])
 			# print("box", self.eliminated_list)
@@ -198,8 +213,14 @@ class sudoku:
 			#for the space that is being checked
 			self.eliminated_list = list(dict.fromkeys(self.eliminated_list))
 			#this will remove any duplicates from the list of values that need to be removed. 
+			print(self.eliminated_list)
 			for x in range(len(self.eliminated_list)):
 				self.solving_dict[(i,j)].remove(self.eliminated_list[x])
+				# print("i,j",[i,j])
+				print("eliminate", self.eliminated_list)
+				print(self.solving_dict[(i,j)])
+				#raw_input()
+
 			#this will iterate the list of values that need to be removed and actually
 			#Remove them from the dictionary solutions. 
 			#print(self.solving_dict[(i,j)])
@@ -210,19 +231,21 @@ class sudoku:
 	def every_space(self): 
 		for i in range(9):
 			for j in range(9):
-				#print("i,j",[i,j])
+				print("i,j",[i,j])
 				self.checkspace(i,j)
-				
-				#print("____________________________________________________")
-
+				print("solution",self.solving_dict[(i,j)])
+				print("____________________________________________________")
+				raw_input()
 		print(self.board)
+		print(self.solving_dict)
+
 			
 
 
 game1 = sudoku()
 #game1.checkrow(0,1)
-#game1.checkcol(1,0)
-#game1.checkbox(0,0)
-#game1.checkspace(3,2)
+#game1.checkcol(0,1)
+#game1.checkbox(0,1)
+#game1.checkspace(0,1)
 #game1.initialize_dict()
 game1.every_space()
