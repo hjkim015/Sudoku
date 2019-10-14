@@ -7,7 +7,7 @@ import numpy as np
 
 base  = 3  # Will generate any size of random sudoku board in O(n^2) time
 side  = base*base
-'''
+
 nums  = sample(range(1,side+1),side) # random numbers
 	#This generates a random list of numbers between 1-9 
 	#Translates to sample(range(1,10),9)
@@ -106,25 +106,37 @@ for r in range(1,side+1):
 		# 	print("".join(n+s for n,s in zip(nums[r-1],line1.split("."))) )
 		# 	print(line2)
 		# 	raw_input()
-'''
+
+
 
 
 class sudoku:
 	def __init__(self):
 		
 		#self.board_with_zeros, self.board_true_solution = self.create_board()
+		#self.board = np.array([
+ 	# 		 [0,0,1,0,0,0,0,0,0]
+		# 	,[3,0,0,9,0,0,0,0,1]
+		# 	,[9,0,0,0,0,0,0,0,0]
+		# 	,[0,0,0,5,6,0,0,0,0]
+		# 	,[5,6,0,0,0,0,0,0,0]
+		# 	,[0,2,4,0,1,3,5,0,0]
+		# 	,[0,0,5,0,0,7,0,0,0]
+		# 	,[0,0,7,0,0,0,0,0,5]
+		# 	,[0,0,0,0,0,5,6,0,7]])
 		self.board = np.array([
  			 [0,0,1,0,0,0,0,0,0]
 			,[3,0,0,9,0,0,0,0,1]
 			,[9,0,0,0,0,0,0,0,0]
-			,[0,0,0,5,6,0,0,0,0]
-			,[5,6,0,0,0,0,0,0,0]
+			,[8,0,0,5,6,0,7,0,4]
+			,[5,6,0,7,0,4,0,1,0]
 			,[0,2,4,0,1,3,5,0,0]
 			,[0,0,5,0,0,7,0,0,0]
 			,[0,0,7,0,0,0,0,0,5]
 			,[0,0,0,0,0,5,6,0,7]])
 		self.eliminated_list = []
 		self.initialize_dict()
+		self.col_list = []
 
 	
 	#def create_board(self):
@@ -148,15 +160,7 @@ class sudoku:
 		#for j in range(9):
 		if self.board[i,j] == 0:
 			for index in range(len(row_nonzero_index[0])):
-				# print("i,j",[i,j])
-				# print("elimiated list before", self.eliminated_list)
 				self.eliminated_list.append(self.board[i,row_nonzero_index[0][index]])
-				#self.solving_dict[(i,j)].remove(self.board[i,row_nonzero_index[0][index]])
-				# print("row_nonzero",row_nonzero_index)
-				# print("eliminate",self.eliminated_list)
-
-	
-
 	
 
 	def checkcol(self,i,j):
@@ -165,18 +169,9 @@ class sudoku:
 		#for i in range(9):
 		if self.board[i,j] == 0:
 			for index in range(len(col_nonzero_index[0])):
-				# print("i,j",[i,j])
-				# print("elimiated list before", self.eliminated_list)
 				self.eliminated_list.append(self.board[col_nonzero_index[0][index],j])
 
-				# print("row_col",col_nonzero_index)
-				# print("eliminate",self.eliminated_list)
-		#print(self.solving_dict[(i,j)])
-			#list(dict.fromkeys(self.eliminated_list))
-				#self.solving_dict[(i,j)].remove(self.board[col_nonzero_index[0][index],j])
-			# print("col", self.eliminated_list)
-			# print(self.solving_dict[(i,j)])
-			
+
 
 	def checkbox(self,i,j):
 		a = i/3
@@ -193,15 +188,9 @@ class sudoku:
 			self.checkcol(i,j)
 
 			for x in range(len(box_nonzero_index[0])):
-				# print("i,j",[i,j])
-				# print("elimiated list before", self.eliminated_list)
+
 				self.eliminated_list.append(self.board[box_nonzero_index[0][x]+3*a,box_nonzero_index[1][x]+3*b])
-				# print("box remove locations",box_nonzero_index)
-				# print("eliminate",self.eliminated_list)
-			#ist(dict.fromkeys(self.eliminated_list))
-				#self.solving_dict[(i,j)].remove(self.board[box_nonzero[0][x]+3*a,box_nonzero[1][x]+3*b])
-			# print("box", self.eliminated_list)
-			# print(self.solving_dict[(i,j)])
+
 
 		
 	def checkspace(self,i,j):
@@ -213,39 +202,114 @@ class sudoku:
 			#for the space that is being checked
 			self.eliminated_list = list(dict.fromkeys(self.eliminated_list))
 			#this will remove any duplicates from the list of values that need to be removed. 
-			print(self.eliminated_list)
 			for x in range(len(self.eliminated_list)):
 				self.solving_dict[(i,j)].remove(self.eliminated_list[x])
-				# print("i,j",[i,j])
-				print("eliminate", self.eliminated_list)
-				print(self.solving_dict[(i,j)])
-				#raw_input()
-
+			self.eliminated_list = []
 			#this will iterate the list of values that need to be removed and actually
 			#Remove them from the dictionary solutions. 
 			#print(self.solving_dict[(i,j)])
 		if len(self.solving_dict[(i,j)]) == 1:
 			self.board[i,j] = self.solving_dict[(i,j)][0]
-			#print(self.board)
+		
+		#print("solution",self.solving_dict[(i,j)])
 
 	def every_space(self): 
 		for i in range(9):
 			for j in range(9):
-				print("i,j",[i,j])
+				#print("i,j",[i,j])
 				self.checkspace(i,j)
-				print("solution",self.solving_dict[(i,j)])
-				print("____________________________________________________")
-				raw_input()
-		print(self.board)
-		print(self.solving_dict)
+				# print((i,j),self.solving_dict[(i,j)])
+				# #print("____________________________________________________")
 
+		# raw_input()
+		# print(self.board)
+		# print(self.solving_dict)
+
+
+
+	def col_most_nonzero(self):
+		#this function will find the column with the most solutions 
+		for j in range(9):
+			col_array = np.where(self.board[:,j]>0)
+			col_count = len(col_array[0])
+			self.col_list.append(col_count)
+		maxpos = self.col_list.index(max(self.col_list)) 
+		self.col_location = self.board[:,maxpos]
+		print(self.col_location)
+
+	def col_pairs(self):
+		#this function will look for the "pairs" in a column 
+		#then take out the solutions from other numbers in the same box. 
+
+		#making the solutions based on rows and columns
+		self.col_most_nonzero()
+		self.checkcol(i,self.col_location)
+		self.checkrow(i,self.col_location)
+		print(solving_dict[(i,self.col_location)])
+
+		#identifying the pair
+		#identifying what box the pair is in
+		#taking out the pair solutions from the other numbers already in the box
+
+
+	def truth_table(self):
+		self.every_space()
+		for i in range(3,6):
+			#print(i)
+			self.temp = []
+			#this initializes the list of the values of potential solutions for a row
+		
+			a_len = len(np.where(self.board[i,:] < 1)[0])
+			truth_array = np.zeros([a_len,a_len])
 			
+			for j in range(9): 
+				if self.board[(i,j)] == 0: 
+					self.temp.extend(self.solving_dict[(i,j)])
+					#print((i,j),self.solving_dict[(i,j)])
+
+
+		
+			uni,count = np.unique(self.temp,return_counts = True)
+			counter = 0
+			for j in range(9):
+
+				if self.board[(i,j)] == 0:	
+					temp_sol = self.solving_dict[(i,j)]
+					for k in range(len(temp_sol)):
+						index = np.where(uni == temp_sol[k])
+						truth_array[counter][index] = 1
+						#print(truth_array)
+					
+					counter += 1
+						# raw_input()
+
+			print(i, "truth",truth_array)
+			#for column in truth_array:
+				#iterate through each column of truth array
+				#find columns that have the EXACT same pattern
+				#if three columns have the same patter, they must each have three ones
+				#if two columns have the same pattern, they must each have two ones. 
+
+
+
+
+			print(truth_array)
+			print(self.temp)
+			print("potential",uni,"choices",count)
+
+
+
+
+
 
 
 game1 = sudoku()
 #game1.checkrow(0,1)
 #game1.checkcol(0,1)
 #game1.checkbox(0,1)
-#game1.checkspace(0,1)
+#game1.checkspace(1,2)
 #game1.initialize_dict()
-game1.every_space()
+#game1.every_space()
+#game1.col_most_nonzero()
+#game1.col_pairs()
+game1.truth_table()
