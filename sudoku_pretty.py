@@ -8,7 +8,6 @@ import numpy as np
 base  = 3  # Will generate any size of random sudoku board in O(n^2) time
 side  = base*base
 
-'''
 nums  = sample(range(1,side+1),side) # random numbers
 	#This generates a random list of numbers between 1-9 
 	#Translates to sample(range(1,10),9)
@@ -74,48 +73,48 @@ nums   = [[""]+[symbol[n] for n in line] for line in board ]
 				# 	print("this is nums", nums)
 				# 	raw_input()
 #________________________________________________________________________________
-#in our case r will iterate through the sequence [1,2,3,4,5,6,7,8,9]
-for r in range(1,side+1):
-	print( "".join(n+s for n,s in zip(nums[r-1],line1.split("."))) ) #columns
-# # 		#WHAT IS HAPPENING: this makes all the numbers of the board appear 
-# # 			#Let's BREAK IT DOWN: print the following code: 
-# # 				# for r in range(1,side+1):
-# # 				# 	print("r", r)
-# # 				# 	print(nums)
-# # 				# 	print("nums:these are the numbers/blank spots on the sudoku board",nums[r-1])
-# # 				# 	print("line1: these are the pipes of the sudoku board", line1.split("."))
-# # 				# 	zipping = zip(nums[r-1], line1.split("."))
-# # 				# 	print("this is zip's final list of tuples that joined nums and line1", zipping)
-# # 				# 	print("joining everything", "".join(n+s for n,s in zipping))
-# # 				# 	raw_input()
- 	print([line2,line3,line4][(r%side==0)+(r%base==0)])
-# # 		#WHAT IS HAPPENING:Makes horizontal separators on the board appear 
-# # 		#The modulo here is actually unnesscary. 
-# # 		#if you put print(line2), it yields the same sudoku board
-# 		#Mod was there becaue the original code had non aSCII symbols 
-# 			
-		#and wanted to control the 3*3 boxes within the sudoku board. 
-	#TO UNDERSTAND THIS WHOLE ENTIRE FOR LOOP: Joining the "floors",#s, and pipes
-	#Run this code to get a better idea of what is going on: 
-	#notice how the individual spaces have a height of two pipes, not one. 
-	#This occurs because you are stacking lines on top of each other. 
-		# for r in range(1,side+1):
-		# 	print("row", "".join(n+s for n,s in zip(nums[r-1],line1.split("."))) )
-		# 	raw_input()
-		# 	print("floor",line2)
-		# 	raw_input()
-		# 	print("".join(n+s for n,s in zip(nums[r-1],line1.split("."))) )
-		# 	print(line2)
-		# 	raw_input()
+# #in our case r will iterate through the sequence [1,2,3,4,5,6,7,8,9]
+# for r in range(1,side+1):
+# 	print( "".join(n+s for n,s in zip(nums[r-1],line1.split("."))) ) #columns
+# # # 		#WHAT IS HAPPENING: this makes all the numbers of the board appear 
+# # # 			#Let's BREAK IT DOWN: print the following code: 
+# # # 				# for r in range(1,side+1):
+# # # 				# 	print("r", r)
+# # # 				# 	print(nums)
+# # # 				# 	print("nums:these are the numbers/blank spots on the sudoku board",nums[r-1])
+# # # 				# 	print("line1: these are the pipes of the sudoku board", line1.split("."))
+# # # 				# 	zipping = zip(nums[r-1], line1.split("."))
+# # # 				# 	print("this is zip's final list of tuples that joined nums and line1", zipping)
+# # # 				# 	print("joining everything", "".join(n+s for n,s in zipping))
+# # # 				# 	raw_input()
+#  	print([line2,line3,line4][(r%side==0)+(r%base==0)])
+# # # 		#WHAT IS HAPPENING:Makes horizontal separators on the board appear 
+# # # 		#The modulo here is actually unnesscary. 
+# # # 		#if you put print(line2), it yields the same sudoku board
+# # 		#Mod was there becaue the original code had non aSCII symbols 
+# # 			
+# 		#and wanted to control the 3*3 boxes within the sudoku board. 
+# 	#TO UNDERSTAND THIS WHOLE ENTIRE FOR LOOP: Joining the "floors",#s, and pipes
+# 	#Run this code to get a better idea of what is going on: 
+# 	#notice how the individual spaces have a height of two pipes, not one. 
+# 	#This occurs because you are stacking lines on top of each other. 
+# 		# for r in range(1,side+1):
+# 		# 	print("row", "".join(n+s for n,s in zip(nums[r-1],line1.split("."))) )
+# 		# 	raw_input()
+# 		# 	print("floor",line2)
+# 		# 	raw_input()
+# 		# 	print("".join(n+s for n,s in zip(nums[r-1],line1.split("."))) )
+# 		# 	print(line2)
+# 		# 	raw_input()
 
-'''
+
 
 
 class sudoku:
 	def __init__(self):
 		
 		#self.board_with_zeros, self.board_true_solution = self.create_board()
-		# self.board = np.array([
+		#self.board = np.array([
  	# 		 [0,0,1,0,0,0,0,0,0]
 		# 	,[3,0,0,9,0,0,0,0,1]
 		# 	,[9,0,0,0,0,0,0,0,0]
@@ -131,18 +130,24 @@ class sudoku:
 			,[9,0,0,0,0,0,0,0,0]
 			,[8,0,0,5,6,0,7,0,4]
 			,[5,6,0,7,0,4,0,1,0]
-			,[7,2,4,0,1,0,5,0,0]
+			,[0,2,4,0,1,3,5,0,0]
 			,[0,0,5,0,0,7,0,0,0]
 			,[0,0,7,0,0,0,0,0,5]
 			,[0,0,0,0,0,5,6,0,7]])
-
 		self.eliminated_list = []
 		self.initialize_dict()
+			#so we have a solution dictionary to work with 
 		self.col_list = []
+		self.iteration = 1
+		#print(self.solving_dict)
 
+	
+	#def create_board(self):
 		
 
 	def initialize_dict(self):
+		#this will create the first iteration of the solution
+		#if there is a space with no # --> the solution will be 1-9
 		self.solving_dict = {}
 		
 		for i in range(9):
@@ -153,7 +158,6 @@ class sudoku:
 				else:
 					self.solving_dict[(i,j)] = [self.space]
 
-
 	def checkrow(self,i,j):
 		row_nonzero_index = np.where(self.board[i,:]>0)
 		#gives the index location of numbers already in the row
@@ -161,15 +165,18 @@ class sudoku:
 		if self.board[i,j] == 0:
 			for index in range(len(row_nonzero_index[0])):
 				self.eliminated_list.append(self.board[i,row_nonzero_index[0][index]])
-	
+				#will eliminate the nonzero number from the space's solution
 
 	def checkcol(self,i,j):
 		col_nonzero_index = np.where(self.board[:,j]>0)
-		#gives the index location of numers already in the column 
+		#gives the index location of numbers already in the column 
 		#for i in range(9):
 		if self.board[i,j] == 0:
 			for index in range(len(col_nonzero_index[0])):
 				self.eliminated_list.append(self.board[col_nonzero_index[0][index],j])
+
+		print(col_nonzero_index)
+		print(index)
 
 
 
@@ -184,17 +191,15 @@ class sudoku:
 		
 		
 		if self.board[i,j] == 0:
-			self.checkrow(i,j)
-			self.checkcol(i,j)
-
 			for x in range(len(box_nonzero_index[0])):
-
 				self.eliminated_list.append(self.board[box_nonzero_index[0][x]+3*a,box_nonzero_index[1][x]+3*b])
+				#add onto the list of numbers that need to be eliminated
+				#for the space
 
-
-		
 	def checkspace(self,i,j):
+
 		if self.board[i,j] == 0:
+
 			self.checkrow(i,j) 
 			self.checkcol(i,j)
 			self.checkbox(i,j)
@@ -202,151 +207,276 @@ class sudoku:
 			#for the space that is being checked
 			self.eliminated_list = list(dict.fromkeys(self.eliminated_list))
 			#this will remove any duplicates from the list of values that need to be removed. 
-			for x in range(len(self.eliminated_list)):
-				self.solving_dict[(i,j)].remove(self.eliminated_list[x])
-			self.eliminated_list = []
+			#print(self.board)
+
+			if len(self.eliminated_list) > 0:
+				#basically if there are still numbers that need to be removed from the 
+				#space's potential solution list.  
+				for x in range(len(self.eliminated_list)):
+					if self.eliminated_list[x] in self.solving_dict[(i,j)]:
+						self.solving_dict[(i,j)].remove(self.eliminated_list[x])
+
+					# print("i,j",i,j)
+					# print("eliminate list",self.eliminated_list)
+					# print("range",range(len(self.eliminated_list)))
+					# print("x", x)
+					# print("dictionary", self.solving_dict[(i,j)])
+					# raw_input()
 			#this will iterate the list of values that need to be removed and actually
-			#Remove them from the dictionary solutions. 
-			#print(self.solving_dict[(i,j)])
-		if len(self.solving_dict[(i,j)]) == 1:
-			self.board[i,j] = self.solving_dict[(i,j)][0]
-		
-		#print("solution",self.solving_dict[(i,j)])
+			#Remove them from the dictionary solutions.	
+				
+			self.eliminated_list = []
+			#will need to reset the list because solutions very for each 
+			#empty space.  
+			
+			if len(self.solving_dict[(i,j)]) ==1:
+				self.board[i,j] = self.solving_dict[(i,j)][0]
+			#if there is already a solution, update the sudoku board. 
 
 	def every_space(self): 
+		#print("before", self.board)
 		for i in range(9):
 			for j in range(9):
-				#print("i,j",[i,j])
 				self.checkspace(i,j)
-				# print((i,j),self.solving_dict[(i,j)])
-				# #print("____________________________________________________")
+		# dot = 1
+		# for key in self.solving_dict:
+		# 	if len(self.solving_dict[key]) == 1:
+		# 		print("solution!", key, self.solving_dict[key], "count", dot)
+		# 		dot +=1
 
-		# raw_input()
-		# print(self.board)
-		# print(self.solving_dict)
+		#print("after", self.board)
 
-
-
-	def col_most_nonzero(self):
-		#this function will find the column with the most solutions 
-		for j in range(9):
-			col_array = np.where(self.board[:,j]>0)
-			col_count = len(col_array[0])
-			self.col_list.append(col_count)
-		maxpos = self.col_list.index(max(self.col_list)) 
-		self.col_location = self.board[:,maxpos]
-		print(self.col_location)
-
-	def col_pairs(self):
-		#this function will look for the "pairs" in a column 
-		#then take out the solutions from other numbers in the same box. 
-
-		#making the solutions based on rows and columns
-		self.col_most_nonzero()
-		self.checkcol(i,self.col_location)
-		self.checkrow(i,self.col_location)
-		print(solving_dict[(i,self.col_location)])
-
-		#identifying the pair
-		#identifying what box the pair is in
-		#taking out the pair solutions from the other numbers already in the box
-
-
-	def truth_table(self):
-		#the truth table is a table that shows the #s that are in a space in the rows
-		#and how many time a number appears as a potential solution in columns
-		#in the form of a 1 of 0
-		#patterns found in this table can help eliminate more potential solutions 
+	def truth_table_row(self):
+		#After going through the process of checking screening the solutions
+		#for basic columns,boxes, and rows,
+		#this function will check paterns in temporary solutions to 
+		#further narrow down the solutions by making truth tables for each row
 
 		self.every_space()
+		#print("before", self.board)
 
-		#print(self.board)
-		for i in range(3,6):
-			#print(i)
+		for i in range(9):
+		#this will iterate through all the rows
 			self.temp = []
 			#this initializes the list of the values of potential solutions for a row
-		
+			empty_space = []
+			#this initializes the list of values of the location of the column
+			#in the truth table. 
 			a_len = len(np.where(self.board[i,:] < 1)[0])
-			#print("a_len", a_len)
-			#Based on the row, this will find the length of the list that
-			#of the number of blank spaces.
-			#aka the # of blank spaces = the length of the list 
-
+			#finds how many solutions NEED to be found in the row 
+			#how: records the indexes of zero integers in the row and store in list
+			#finds the length of that list. 
+			# print(i)
+			# print(self.board[i,:])
+			# print(self.board[i,:] < 1)
+			# print(np.where(self.board[i,:] < 1))
+			# print(np.where(self.board[i,:] < 1)[0])
+			# print("alen", a_len)
 			truth_array = np.zeros([a_len,a_len])
-			#this will initialize a truth_array that is all zeros 
-			#based on the number of blank spaces there are in the current 
-			#row the program is checking. 
+			#print(truth_array)
+			#initializes the truth_array to be all zeros
+			#with dimensions based on how many solutions need to be found
 			#print(truth_array)
 
-			
 			for j in range(9): 
-				#this loop will go through all of the spaces in the row
-				if self.board[(i,j)] == 0: 
-					#if the space is blank, then it will add the potential 
-					#solutions of that space to a longer list of potential solutions
-					#of the whole row 
+				#iterate through each space of the row
+				if self.board[(i,j)] == 0:
+				#if the space has no solution yet
 					self.temp.extend(self.solving_dict[(i,j)])
-					#print(self.temp)
+					#record the numbers that are potential solutions for that
+					#whole entire row
+					empty_space.append(j)
+					#record the loctions by using column index of
+					#spaces that still need solutions. 
+
 
 			uni,count = np.unique(self.temp,return_counts = True)
-			#this line of code will give you two lists in an array
-			#the first list will give you "unique solutions." 
-			#[1,1,1,1,2,2,2] --> [1,2]
-			#the second list will give you "count": how many of each number was in self.temp
-			#[1,1,1,1,2,2,2] --> [4,3]
-
-			# print(uni)
-			# print(count)
-
+			#will find the unique solutions and how many times they appear
+			self.temp = uni
+			#the final row of unique solutions for the truth table. 
+			
 			counter = 0
-			#We need to set counter to zero here because it will help us 
-
-
-
-
 			for j in range(9):
-				#this will iterate through each space in the row
-				if self.board[(i,j)] == 0:	
+			#iterate through each space in that row. 
+			#this section of the code will put the needed 1s into the table
+				if self.board[(i,j)] == 0:
+				#if space has no solution yet	
 					temp_sol = self.solving_dict[(i,j)]
-					#print(self.solving_dict[(i,j)])
-					#if the space is blank, temp_sol will be replaced with the 
-					#potential solutions of that space
-					
-
+	
+					#set the temporary solution equal to what is in the 
+					#solution dictionary already 
 					for k in range(len(temp_sol)):
-						#this will itereate through the lenth of the potential solutions
-						#for the space you are checking.
-						#the main objective is to add ones to the truth table 
-						#when appropriate 
-						print("temp_sol", temp_sol)
-						print("iterating through",range(len(temp_sol)))
-						print("k",k)
+						#iterate through the number of solutions in the dictionary
+						#ONLY for that space. 
+						#this will look for where the potential solutions 
+						#for the space match the the potential solutions for the row
+						#this is because the potential solutiosn for the row are in order
+						#for how the columns of the truth table are ordered. 
 						index = np.where(uni == temp_sol[k])
-						#This will output the indexes of the number 
-						print(temp_sol[k])
-						print("uni",uni)
-						print(uni==temp_sol[k])
-						print("index", index)
+						#Example:
+							#temp_sol = [1,3,9]
+							#uni = [1,2,3,9]
+							#Iterating through range [0,1,2]
+							#Program will go to k = 0
+							#program will see where temp_sol[k] == uni
+							#in other words, where does 1 appear in uni?
+							#program will spit out the index based on uni
+	
+						#where does the solution in our dictinary
+						#match the unique solutions of truth table? 
+						#trying to find the column location of where the 
+						#number can be a solution for the space in truth table
 						truth_array[counter][index] = 1
-						print(truth_array)
-						raw_input()
-
-						#print(truth_array)
-					counter += 1
+						# print(truth_array)
+						# print("i =", i)
 						# raw_input()
+						#sets the appropriate places in the truth table to zerio
+						#if there is already a solution. 	
+						#counter gave us the row, index gives us the column
+					counter += 1
+
+		#after the truth table has been made:
+			truth_array = np.array(truth_array)
+			# print(truth_array)
+
+			one_solution_col = np.sum(truth_array, axis = 0)
+			#print(one_solution_col)
+			#this will add up the columns of the truth _array
+			where_one_col = np.where(one_solution_col == 1)
+
+			#this will output the indices of where there is only one solution 
+			#based on the outputs of one_solution_col in array format
+		
+ 			 #_----------------------------------------------------------------
+			if len(where_one_col[0]) > 0:
+				#FOR THE DEFINITE ONE SOLUTION based on truth table columns
+				#print("before", self.board)
+
+				#This chunk right here will replace the zero on the sudoku board
+				#with the solution. 
+				for loc in range(len(where_one_col[0])):
+					column = truth_array[:,where_one_col[0][loc]]
+					where_one_row = np.where(column == 1)[0][0]
+					#print("row", where_one_row)
+					where_one_col_board = empty_space[where_one_row]
+					# print("column",column)
+					# print("where", where_one_row)
+				#if there is actually one solution in the truth table:
+				one_sol = uni[where_one_col][0]
+				#print("one",one_sol)
+				self.board[(i, where_one_col_board)] = one_sol
+				#this will set the proper space on the sudoku board to its solution 
+				self.solving_dict[(i,where_one_col_board)] = one_sol
+				#updates the solving dictionary's solutions 
+
+				#remember, no need to revise the truth table because when 
+				#the progrma iterates through, it creates a new truth table
+				#based on the changed criteria outlines above. 
+
+			print("iteratoin", self.iteration, "i",i, truth_array)
+			print("uni", uni, "location", empty_space)
+			print("4,2",self.solving_dict[(4,2)], "3,2",self.solving_dict[(3,2)])
+			print(self.board)
 			raw_input()
-			print("i", i)
-			print(self.board[i])
-			print(truth_array)
-			#for column in truth_array:
-				#iterate through each column of truth array
-				#find columns that have the EXACT same pattern
-				#if three columns have the same patter, they must each have three ones
-				#if two columns have the same pattern, they must each have two ones. 
 
-			print("temp",self.temp)
-			print("potential",uni,"choices",count)
+	def truth_table_col(self):
+		reverse_board = np.transpose(self.board)
+		#this will transpose the oringinal sudoky board so that you can work 
+		#with the columns for the truth array 
+		self.every_space()
+		print(self.board)
+		print("________________________________________")
+		print(reverse_board)
+		for i in range (9):	
+		#Go through each row and create a truth table
+			sol = []
+			empty_space = []
+			#establish dimensions of the truth table by finding number of zeros in row
+			r_len = len(np.where(reverse_board[i,:] < 1)[0])
+			truth_array = np.zeros([r_len,r_len])
 
+			for j in range(9): 
+			#iterate through each space of the row
+			#finds the uniques set of solutions for truth table. 
+				if reverse_board[(i,j)] == 0:
+				#if the space has no solution yet
+					print("i,j",i,j)
+					print("dict",self.solving_dict[(j,i)])
+					sol.extend(self.solving_dict[(j,i)])
+					print("solution.",sol)
+					#record the numbers that are potential solutions for that
+					#whole entire row
+					empty_space.append(j)
+					#-->will keep track of the location of where to change
+					#the number on the sudoku board. 
+					#COME BACK TO THIS ONEEEEEEEEEEEEE
+
+
+			uni,count = np.unique(sol,return_counts = True)
+
+			#will find the unique solutions and how many times they appear
+
+			print("uniqueeee", uni)
+			
+
+			
+			#the final row of unique solutions for that row in numerical order
+			counter = 0
+			#start putting in 1s in the appropriate places. 
+			for j in range(9):
+				if reverse_board[(i,j)] == 0:
+				#if space has no solution yet	
+					sol = self.solving_dict[(j,i)]
+					#set the temporary solution equal to what is in the 
+					#solution dictionary already 
+					for k in range(len(sol)):
+						#iterate through the number of solutions in the dictionary
+						#ONLY for that space. 
+						index = np.where(uni == sol[k])
+						#Example:
+							#sol = [1,3,9]
+							#uni = [1,2,3,9]
+							#Iterating through range [0,1,2]
+							#Program will go to k = 0
+							#program will see where sol[k] == uni
+							#in other words, where does 1 appear in uni?
+							#program will spit out the index based on uni
+	
+						#where does the solution in our dictinary
+						#match the unique solutions of truth table? 
+						#trying to find the column location of where the 
+						truth_array[counter][index] = 1
+						print("(i,j",i,j)
+						print("i",i, truth_array)
+						print("uni",uni)
+						print("sol",sol)
+						print("k",k,"sol[k]",sol[k])
+
+
+
+			print("i", i, truth_array)
+			raw_input()
+
+				#compile a list of the solutions for that row
+				#**Tricky** compile a list of the locations of the empty spaces -->
+					#only the row number is necessary because that is the
+					#"column" on the actual sudoku board
+		
+
+	def solve(self):
+		self.every_space()
+		self.truth_table_row()
+		self.iteration += 1
+		self.every_space()
+		self.truth_table_row()
+		self.iteration += 1
+		self.every_space()
+		self.truth_table_row()
+
+		# while :
+		# 	pass
+		# else: 
+		# 	print("this is the solution", self.board)
 
 
 
@@ -357,9 +487,9 @@ game1 = sudoku()
 #game1.checkrow(0,1)
 #game1.checkcol(0,1)
 #game1.checkbox(0,1)
-#game1.checkspace(1,2)
+#game1.checkspace(3,1)
 #game1.initialize_dict()
 #game1.every_space()
-#game1.col_most_nonzero()
-#game1.col_pairs()
-game1.truth_table()
+#game1.truth_table_row()
+game1.truth_table_col()
+#game1.solve()
