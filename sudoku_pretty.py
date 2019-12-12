@@ -158,7 +158,6 @@ class sudoku:
 					self.solving_dict[(i,j)] = [1,2,3,4,5,6,7,8,9]
 				else:
 					self.solving_dict[(i,j)] = [self.space]
-
 	def checkrow(self,i,j):
 		row_nonzero_index = np.where(self.board[i,:]>0)
 		#gives the index location of numbers already in the row
@@ -167,7 +166,6 @@ class sudoku:
 			for index in range(len(row_nonzero_index[0])):
 				self.eliminated_list.append(self.board[i,row_nonzero_index[0][index]])
 				#will eliminate the nonzero number from the space's solution
-
 	def checkcol(self,i,j):
 		col_nonzero_index = np.where(self.board[:,j]>0)
 		#gives the index location of numbers already in the column 
@@ -175,7 +173,6 @@ class sudoku:
 		if self.board[i,j] == 0:
 			for index in range(len(col_nonzero_index[0])):
 				self.eliminated_list.append(self.board[col_nonzero_index[0][index],j])	
-
 	def checkbox(self,i,j):
 		a = i/3
 		b = j/3
@@ -191,7 +188,6 @@ class sudoku:
 				self.eliminated_list.append(self.board[box_nonzero_index[0][x]+3*a,box_nonzero_index[1][x]+3*b])
 				#add onto the list of numbers that need to be eliminated
 				#for the space
-
 	def checkspace(self,i,j):
 
 		if self.board[i,j] == 0:
@@ -230,7 +226,6 @@ class sudoku:
 				self.every_space()
 			#if there is already a solution, update the sudoku board a
 			#and check every space of the board again. 
-
 	def every_space(self): 
 		#print("before", self.board)
 		for i in range(9):
@@ -243,7 +238,6 @@ class sudoku:
 		# 		dot +=1
 
 		#print("after", self.board)
-
 	def truth_table_row(self):
 		#After going through the process of checking screening the solutions
 		#for basic columns,boxes, and rows,
@@ -396,7 +390,6 @@ class sudoku:
 			# print("4,2",self.solving_dict[(4,2)], "3,2",self.solving_dict[(3,2)])
 			# print(self.board)
 			# raw_input()
-
 	def truth_table_col(self):
 		reverse_board = np.transpose(self.board)
 		#this will transpose the oringinal sudoky board so that you can work 
@@ -409,7 +402,6 @@ class sudoku:
 
 		self.every_space()
 		#print(reverse_board)
-	
 
 		for i in range(2,3):
 		#this will iterate through all the rows
@@ -419,6 +411,7 @@ class sudoku:
 			#this initializes the list of values of the location of the column
 			#in the truth table. 
 			a_len = len(np.where(reverse_board[i,:] < 1)[0])
+		
 
 			#finds how many solutions NEED to be found in the row 
 			#how: records the indexes of zero integers in the row and store in list
@@ -496,14 +489,11 @@ class sudoku:
 			truth_array = np.array(truth_array)
 			# print("i",i,"iteration", self.iteration)
 			# print("col")
+			# print("(i,j",i,j)
+			# print(uni)
+			# print(temp_sol)
 			# print(truth_array)
 			# raw_input()
-			print("col")
-			print("(i,j",i,j)
-			print(uni)
-			print(temp_sol)
-			print(truth_array)
-			raw_input()
 			
 
 			one_solution_col = np.sum(truth_array, axis = 0)
@@ -540,49 +530,152 @@ class sudoku:
 				#the progrma iterates through, it creates a new truth table
 				#based on the changed criteria outlines above. 
 			#------------------------------------------------------------------
+			#FOR THE DEFINITE PAIR SOLUTION 
+			
 
-			combination = list(combinations(truth_array,2))
-			print(truth_array)
-			print("length", len(combination))
-			print(combination)
-			#raw_input()
 
-			#for combo in combination:
+			pair_check_list = []
+			pair_space_where = []
+			for row in range(a_len):
+				row_sum = sum(truth_array[row])
+				if row_sum == 2:
+					pair_check_list.append(row)
+
+			combination = list(combinations(range(len(pair_check_list)),2))
 		
-
 			for combo in combination:
-				pair_check = []
-				for element in range(a_len):
-					pair_check.append(combo[0][a_len] + combo[1][a_len])
+				pair_value_list = []
+				#going to be a list of the pair values!!!!!!!
+				first_row = truth_array[pair_check_list[combo[0]]]
+				second_row = truth_array[pair_check_list[combo[1]]]
+			
+				if (first_row == second_row).all():
+				#uses the .all() because the stuff before it is a list of trues and falses. 
+					pair_value_index = np.where(np.array(first_row) == 1)
+					pair_value_list.append(temp[pair_value_index])
+					#adds the pair values to a list
+					#tells us the physical pair values. 
+					non_pair_location = list(empty_space)
+					for r in range(2):
+						pair_where_index = empty_space[pair_check_list[r]]
+						pair_space_where.append(pair_where_index)
+						#tells us the j coordinates of the spaces that have the pairs
+						non_pair_location.remove(pair_space_where[r])
+						#tells us the j coordinates of the spaces that should not 
+						#have the pair values in their potential solutions list. 
+
+					#Go an remove those pair values form the non_pairs
+					for space in range(len(non_pair_location)):
+					#so for every space where the pair values need to be removed
+						for v in range(len(pair_value_list)):
+						#iterate through all the values that need to be removed.
+							removing_space = self.solving_dict[(non_pair_location[space], i)]
+							#the current solutions for the space where values need to be removed. 
+							print("before", removing_space)
+							if v in removing_space:
+								removing_space = removing_space.remove(v)
+								print("after", removing_space)
 
 
 
-
-
-
-			print("should equal= [1]",combination[0][0][0])
-			print("should equal= [1]",combination[0][1][0])
-			print(combination[0][0][0] + combination[0][1][0])
-				#for element in range(a_len):        
-					# 
-					# print(a_len)
-
-
-
-
-
-		
-	
-	
-
-
-
+				
+							
 
 			
+					
+					
+
+
+
+
+
+
+
+					#find the actual pair values 
+					#find the locaiton of the spaces that should not have the pair values.
+
+					
+
+
+
+
+
+	
+
+
+			# for combo in combination:
+			# 	#will iterate through every combination of rows in the truth table. 
+			# 	pair_check_list = []
+			# 	print("combo", combo)
+			# 	print(truth_array[combo[0]])
+			# 	print(truth_array[combo[1]])
+			# 	raw_input()
+
+			# 	# pair_check_list = []
+			# 	if truth_array[combo[0]] == truth_array[combo[1]]:
+			# 	 	print("Success!")
+
+			# 	for row in range(a_len):
+			# 		for element in range(2):
+			# 			pair_check_list.append(truth_array[combo[element]] + truth_array[combo[element]])
+			# 			#tells you the sum of those two rows and makes it a separate list
+			# 			pair_where = np.where(np.array(pair_check_list) == 2)
+			# 			#tells you the indexes of where the list has 2 --> 
+			# 			#this is crucial because we need exactly two 2s for pair solution to work
+			# 			zero_where = np.where(np.array(pair_check_list) == 0)
+			# 			#tells you the indexes of where the list has 0
+			# 			#this is crucial because the pair solution has to have zeros
+			# 			#in every other space that is not 2
+			# 			spaces_left = a_len-2
+			# 			row_where = []
+			# 			#the number of spaces that has to be zero in order for
+			# 			#pair pattern to work. 
+			# 	if len(pair_where[0] == 2) and len(zero_where[0]) == spaces_left:
+			# 		#if the combination of rows satisfy pair pattern conditions:
+			# 			#two 2s
+			# 			#zeros in all other spaces
+			# 		row_where.append(combo)
+			# 		print("rowwhere",row_where)
+					
+			# 		for l in range(2):
+			# 		#then iterate through each element  of the pairs. 
+			# 			pair_value = temp[pair_where[0][l]]
+			# 			print("pair value", pair_value)
+			# 			pair_index = np.where(truth_array == combo[l])
+			# 			for a in range(spaces_left):
+			# 				del self.solving[(row_where[a], i)][pair_value]
+
+			# 			#NEED TO FIGURE OUT WHAT J IS. 
+
+			# 			print("combo", combo[l])
+			# 			print("index", pair_index)
+			# 			#the pair values that need to be eliminated as potential solutions 
+			# 			#for other spaces. 
+			# 			# for space in range(spaces_left):
+			# 			# 	elim_sol = np.where(self.solving_dict[()] == pair_value)
+			# 			# 	del self.solving_dict[()][elim_sol]
+			
+			# 			print("value",pair_value)
+			# 			print("empty_space",empty_space)
+			# 			#find those #'s of thosthee pairs and put them into pairs
+			# 			#take those numbers and take them out of the 
+			# 			#potential solutions for the other spaces. 
+
+
+				
+
+			# 		print(pair_check)
+
+			# # 	raw_input()
+			# # 	print("________________________________________________")
+
+			# self.every_space()
+
+
+
 	def truth_table(self):
 		self.truth_table_row()
 		self.truth_table_col()
-
 	def solve(self):
 		self.truth_table()
 		self.iteration += 1
@@ -590,8 +683,6 @@ class sudoku:
 		self.iteration += 1
 		self.truth_table()
 		print(self.board)
-
-
 
 
 game1 = sudoku()
