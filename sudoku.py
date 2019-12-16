@@ -127,15 +127,15 @@ class sudoku:
 		# 	,[0,0,7,0,0,0,0,0,5]
 		# 	,[0,0,0,0,0,5,6,0,7]])
 		self.board = np.array([
- 			 [0,0,1,0,0,0,0,0,0]
+ 			 [4,0,1,0,5,0,9,0,0]
 			,[3,0,0,9,0,0,0,0,1]
-			,[9,0,0,0,0,0,0,0,0]
-			,[8,0,0,5,6,0,7,0,4]
+			,[9,0,2,0,0,1,0,5,0]
+			,[8,0,3,5,6,0,7,0,4]
 			,[5,6,0,7,0,4,0,1,0]
 			,[0,2,4,0,1,3,5,0,0]
-			,[0,0,5,0,0,7,0,0,0]
-			,[0,0,7,0,0,0,0,0,5]
-			,[0,0,0,0,0,5,6,0,7]])
+			,[0,0,5,0,0,7,0,4,0]
+			,[0,0,7,0,0,8,0,0,5]
+			,[0,2,0,1,0,5,6,0,7]])
 		self.eliminated_list = []
 		self.initialize_dict()
 			#so we have a solution dictionary to work with 
@@ -246,7 +246,7 @@ class sudoku:
 		#further narrow down the solutions by making truth tables for each row
 
 		self.every_space()
-		print(self.board)
+		#print(self.board)
 		#print("before", self.board)
 
 		for i in range(9):
@@ -376,7 +376,70 @@ class sudoku:
 				#remember, no need to revise the truth table because when 
 				#the progrma iterates through, it creates a new truth table
 				#based on the changed criteria outlines above. 
+			#------------------------------------------------------------------
+			pair_check_list = []
+			pair_space_where = []
+			for row in range(a_len):
+			#check the sum of each row in the truth table. 
+				row_sum = sum(truth_array[row])
+				if row_sum == 2:
+					pair_check_list.append(row)
+					#add the index of that row in truth table to pair_check_list
 
+			combination = list(combinations(range(len(pair_check_list)),2))
+			#will output the indexes
+
+			#print("combination", combination)
+			if len(combination) > 0: 
+				if len(combination[0])>1:
+					for combo in combination:
+						pair_value_list = []
+						#going to be a list of the pair values!!!!!!!
+						first_row = truth_array[pair_check_list[combo[0]]]
+						#print("combo", combo)
+						#print("checl_list",pair_check_list)
+						#print(truth_array)
+						second_row = truth_array[pair_check_list[combo[1]]]
+					
+						if (first_row == second_row).all():
+						#uses the .all() because the stuff before it is a list of trues and falses. 
+							
+							non_pair_location = list(empty_space)
+							for r in range(2):
+								pair_value_index = np.where(np.array(first_row) == 1)[0][r]
+								pair_value_list.append(temp[pair_value_index])
+								#print(pair_value_list)
+								#tells us the physical pair values. 
+								pair_where_index = empty_space[pair_check_list[combo[r]]]
+								pair_space_where.append(pair_where_index)
+								#tells us the j coordinates of the spaces that have the pairs
+								non_pair_location.remove(pair_space_where[r])
+								#tells us the j coordinates of the spaces that should not 
+								#have the pair values in their potential solutions list. 
+
+							#Go an remove those pair values form the non_pairs
+							for space in range(len(non_pair_location)):
+								# print(non_pair_location)
+								# print("non_pair_location[space]", non_pair_location[space])
+								# print(reverse_board)
+								removing_space = self.solving_dict[(i,non_pair_location[space])]
+								# print(non_pair_location[space],i)
+								# print("before", removing_space)
+							#so for every space where the pair values need to be removed
+								for v in range(len(pair_value_list)):
+									#print("pair", pair_value_list)
+								#iterate through all the values that need to be removed.						
+								#the current solutions for the space where values need to be removed. 
+									# print("v", v, "[v]",pair_value_list[v])
+									# print(pair_value_list[v])
+									# print("removing_space", removing_space)
+									# print(type(removing_space))
+												
+									if pair_value_list[v] in removing_space:
+										removing_space.remove(pair_value_list[v])
+										#print("after", removing_space)
+
+							self.every_space()
 			#for the pairs in column/row case:
 
 
@@ -412,7 +475,7 @@ class sudoku:
 			#this initializes the list of values of the location of the column
 			#in the truth table. 
 			a_len = len(np.where(reverse_board[i,:] < 1)[0])
-			print("AAAAAAAAAAAAAAA", a_len)
+		
 
 			#finds how many solutions NEED to be found in the row 
 			#how: records the indexes of zero integers in the row and store in list
@@ -496,7 +559,6 @@ class sudoku:
 			# print(truth_array)
 			# raw_input()
 			
-
 			one_solution_col = np.sum(truth_array, axis = 0)
 			#print(one_solution_col)
 			#this will add up the columns of the truth _array
@@ -532,57 +594,70 @@ class sudoku:
 				#based on the changed criteria outlines above. 
 			#------------------------------------------------------------------
 			#FOR THE DEFINITE PAIR SOLUTION 
-			combination = list(combinations(truth_array,2))
+
+			pair_check_list = []
+			pair_space_where = []
+			for row in range(a_len):
+			#check the sum of each row in the truth table. 
+				row_sum = sum(truth_array[row])
+				if row_sum == 2:
+					pair_check_list.append(row)
+					#add the index of that row in truth table to pair_check_list
+
+			combination = list(combinations(range(len(pair_check_list)),2))
+			#will output the indexes
 
 
-			for combo in combination:
-				#will iterate through ever combination of rows in the truth table. 
-				pair_check_list = []
-
-				for element in range(a_len):
-					pair_check_list.append(combo[0][element] + combo[1][element])
-					#tells you the sum of those two rows. 
-
-
-				print(pair_check_list)
-				pair_where = np.where(np.array(pair_check_list) == 2)
-				print("pair", pair_where)
-				zero_where = np.where(np.array(pair_check_list) == 0)
-				print("zero", zero_where)
-
-
-				spaces_left = a_len-2
-				if len(pair_where[0] == 2) and len(zero_where[0]) == spaces_left:
-								
-					for l in range(2):
-						pair_value = temp[pair_where[0][l]]
-						pair_index = np.where(truth_array == combo[l])
-						print("combo", combo[l])
-
-
+			if len(combination) > 0: 
+				if len(combination[0])>1: 
+					for combo in combination:
+						pair_value_list = []
+						#going to be a list of the pair values!!!!!!!
+						first_row = truth_array[pair_check_list[combo[0]]]
+						#print("combo", combo)
+						#print("checl_list",pair_check_list)
+						print(truth_array)
+						second_row = truth_array[pair_check_list[combo[1]]]
 					
-						print("index", pair_index)
-						#the pair values that need to be eliminated as potential solutions 
-						#for other spaces. 
-						# for space in range(spaces_left):
-						# 	elim_sol = np.where(self.solving_dict[()] == pair_value)
-						# 	del self.solving_dict[()][elim_sol]
-			
-						print("value",pair_value)
-						print("empty_space",empty_space)
-						#find those #'s of those pairs and put them into pairs
-						#take those numbers and take them out of the 
-						#potential solutions for the other spaces. 
+						if (first_row == second_row).all():
+						#uses the .all() because the stuff before it is a list of trues and falses. 
+							
+							non_pair_location = list(empty_space)
+							for r in range(2):
+								pair_value_index = np.where(np.array(first_row) == 1)[0][r]
+								pair_value_list.append(temp[pair_value_index])
+								#print(pair_value_list)
+								#tells us the physical pair values. 
+								pair_where_index = empty_space[pair_check_list[combo[r]]]
+								pair_space_where.append(pair_where_index)
+								#tells us the j coordinates of the spaces that have the pairs
+								non_pair_location.remove(pair_space_where[r])
+								#tells us the j coordinates of the spaces that should not 
+								#have the pair values in their potential solutions list. 
 
+							#Go an remove those pair values form the non_pairs
+							for space in range(len(non_pair_location)):
+								# print(non_pair_location)
+								# print("non_pair_location[space]", non_pair_location[space])
+								# print(reverse_board)
+								removing_space = self.solving_dict[(non_pair_location[space], i)]
+								# print(non_pair_location[space],i)
+								# print("before", removing_space)
+							#so for every space where the pair values need to be removed
+								for v in range(len(pair_value_list)):
+								#iterate through all the values that need to be removed.						
+								#the current solutions for the space where values need to be removed. 
+									# print("v", v, "[v]",pair_value_list[v])
+									# print(pair_value_list[v])
+									# print("removing_space", removing_space)
+									# print(type(removing_space))
+												
+									if pair_value_list[v] in removing_space:
+										removing_space.remove(pair_value_list[v])
+										#print("after", removing_space)
 
-				
-
-					#print(pair_check)
-
-				raw_input()
-				print("________________________________________________")
-
-			self.every_space()
+							self.every_space()
+	
 
 
 
@@ -590,12 +665,27 @@ class sudoku:
 		self.truth_table_row()
 		self.truth_table_col()
 	def solve(self):
-		self.truth_table()
-		self.iteration += 1
-		self.truth_table()
-		self.iteration += 1
-		self.truth_table()
 		print(self.board)
+		self.truth_table()
+		self.every_space()
+		self.iteration += 1
+		self.truth_table()
+		self.every_space()
+		self.iteration += 1
+		self.truth_table()
+		self.every_space()
+		print(self.board)
+		# for solution in self.solving_dict:
+		# 	print(solution, self.solving_dict[solution])
+		# 	raw_input()
+		counter = 0 
+		solution_check = []
+		for space in self.board:
+			counter +=1
+			if (space > 0).all():
+				solution_check.append(1)
+			if counter == 81 and len(solution) == 81:
+				print("done")
 
 
 game1 = sudoku()
@@ -606,8 +696,9 @@ game1 = sudoku()
 #game1.initialize_dict()
 #game1.every_space()
 #game1.truth_table_row()
-game1.truth_table_col()
+#game1.truth_table_col()
 #game1.truth_table()
-#game1.solve()
+game1.solve()
+
 
 
