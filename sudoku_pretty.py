@@ -13,7 +13,7 @@ nums  = sample(range(1,side+1),side) # random numbers
 	#This generates a random list of numbers between 1-9 
 	#Translates to sample(range(1,10),9)
 	#sample cannot repeat numbers
-	#THIS IS THE MASTER LIST OF NUMBERS THAT GIVES PROGRAM RANDOM ABILITY
+	#THIS IS THE MASTER LIST OF NUMBraw_ERS THAT GIVES PROGRAM RANDOM ABILITY
 board = [[nums[(base*(r%base)+r//base+c)%side] for c in range(side)] for r in range(side)]
 	#HOW DOES THE EQUATION GIVE YOU THE SPECIFIC INDEXES BELOW? 	
 	#This gives you the actual board of the sudoko. A list of lists representing a row.
@@ -42,7 +42,7 @@ board = [[nums[(base*(r%base)+r//base+c)%side] for c in range(side)] for r in ra
 		# 		print((base*(r%base)+r//base+c))
 		# 		print((base*(r%base)+r//base+c)%side)
 		# 		print("nums[]",nums[(base*(r%base)+r//base+c)%side])
-		# 		raw_input()
+		# 		input()
 squares = side*side
 empties = squares * 3//4
 for p in sample(range(squares),empties):
@@ -72,7 +72,7 @@ nums   = [[""]+[symbol[n] for n in line] for line in board ]
 				# 		print("n", n)
 				# 		print([symbol[n]])
 				# 	print("this is nums", nums)
-				# 	raw_input()
+				# 	input()
 #________________________________________________________________________________
 # #in our case r will iterate through the sequence [1,2,3,4,5,6,7,8,9]
 # for r in range(1,side+1):
@@ -87,7 +87,7 @@ nums   = [[""]+[symbol[n] for n in line] for line in board ]
 # # # 				# 	zipping = zip(nums[r-1], line1.split("."))
 # # # 				# 	print("this is zip's final list of tuples that joined nums and line1", zipping)
 # # # 				# 	print("joining everything", "".join(n+s for n,s in zipping))
-# # # 				# 	raw_input()
+# # # 				# 	input()
 #  	print([line2,line3,line4][(r%side==0)+(r%base==0)])
 # # # 		#WHAT IS HAPPENING:Makes horizontal separators on the board appear 
 # # # 		#The modulo here is actually unnesscary. 
@@ -101,12 +101,12 @@ nums   = [[""]+[symbol[n] for n in line] for line in board ]
 # 	#This occurs because you are stacking lines on top of each other. 
 # 		# for r in range(1,side+1):
 # 		# 	print("row", "".join(n+s for n,s in zip(nums[r-1],line1.split("."))) )
-# 		# 	raw_input()
+# 		# 	input()
 # 		# 	print("floor",line2)
-# 		# 	raw_input()
+# 		# 	input()
 # 		# 	print("".join(n+s for n,s in zip(nums[r-1],line1.split("."))) )
 # 		# 	print(line2)
-# 		# 	raw_input()
+# 		# 	input()
 
 class sudoku:
 	def __init__(self):
@@ -134,7 +134,7 @@ class sudoku:
 			,[0,4,0,1,0,5,6,0,7]])
 		self.eliminated_list = []
 		solving_dict = {}
-		self.initialize_dict(board, solving_dict)
+		board, solving_dict = self.initialize_dict(board, solving_dict)
 			#so we have a solution solving_dict to work with 
 		self.col_list = []
 
@@ -159,7 +159,7 @@ class sudoku:
 			for index in range(len(row_nonzero_index[0])):
 				self.eliminated_list.append(board[i,row_nonzero_index[0][index]])
 				#will eliminate the nonzero number from the space's solution
-		return i,j,board, solving_dict
+		
 	def checkcol(self,i,j, board, solving_dict):
 		col_nonzero_index = np.where(board[:,j]>0)
 		#gives the index location of numbers already in the column 
@@ -167,7 +167,6 @@ class sudoku:
 		if board[i,j] == 0:
 			for index in range(len(col_nonzero_index[0])):
 				self.eliminated_list.append(board[col_nonzero_index[0][index],j])	
-
 		return board, solving_dict
 		a = i/3
 		b = j/3
@@ -176,39 +175,34 @@ class sudoku:
 		col_range = range(3*b,3*b+3)
 		#these ranges give you the proper rows and columns in the box you need to look at. 
 		box_nonzero_index = np.where(board[3*a:3*a+3,3*b:3*b+3]>0)
-		
-		
 		if board[i,j] == 0:
 			for x in range(len(box_nonzero_index[0])):
 				self.eliminated_list.append(board[box_nonzero_index[0][x]+3*a,box_nonzero_index[1][x]+3*b])
 				#add onto the list of numbers that need to be eliminated
 				#for the space
-		return i,j, board, solving_dict
+		
+	
 	def checkbox(self,i,j, board, solving_dict):
-		a = i/3
-		b = j/3
+		a = i//3
+		b = j//3
+		# print("a",a, "b", b)
 		#this gives you the proper indexes for the boxes based on where the space is
 		row_range = range(3*a,3*a+3)
 		col_range = range(3*b,3*b+3)
 		#these ranges give you the proper rows and columns in the box you need to look at. 
 		box_nonzero_index = np.where(board[3*a:3*a+3,3*b:3*b+3]>0)
-		
-		
 		if board[i,j] == 0:
 			for x in range(len(box_nonzero_index[0])):
 				self.eliminated_list.append(board[box_nonzero_index[0][x]+3*a,box_nonzero_index[1][x]+3*b])
 				#add onto the list of numbers that need to be eliminated
 				#for the space
-		return i,j,board, solving_dict
 	def checkspace(self,i,j, board, solving_dict):
 		if board[i,j] == 0:
-
-			i,j, board, solving_dict = self.checkrow(i,j, board, solving_dict) 
-			i,j, board, solving_dict = self.checkcol(i,j, board, solving_dict)
-			i,j, board, solving_dict = self.checkbox(i,j, board, solving_dict)
+			self.checkrow(i,j, board, solving_dict) 
+			self.checkcol(i,j, board, solving_dict)
+			self.checkbox(i,j, board, solving_dict)
 			#this will compile a list of all the numbers that need to be removed from the solution 
 			#for the space that is being checked
-
 			self.eliminated_list = list(dict.fromkeys(self.eliminated_list))
 			#will give you only unique values (remove the duplicate numbers. )
 			#this will remove any duplicates from the list of values that need to be removed. 
@@ -218,9 +212,23 @@ class sudoku:
 				#basically if there are still numbers that need to be removed from the 
 				#space's potential solution list.  
 				for x in range(len(self.eliminated_list)):
-					print(x, i,j,  self.eliminated_list, solving_dict.keys())
-					if self.eliminated_list[x] in solving_dict[(i,j)]:
-						solving_dict[(i,j)].remove(self.eliminated_list[x])
+					# print(x, "(", i,j,")", "elimination list", self.eliminated_list)
+					# print("solving dictionary", solving_dict[(i,j)])
+					
+					new = solving_dict[(i,j)]
+					#
+					try:
+						if self.eliminated_list[x] in new:
+							solving_dict[(i,j)].remove(self.eliminated_list[x])
+							for key in solving_dict:
+								print(type(new))
+								print(key, solving_dict[key])
+								print(self.eliminated_list[x])
+					except:
+						pass
+						
+						
+
 			#this will iterate the list of values that need to be removed and actually
 			#Remove them from the solving_dict solutions.	
 				
@@ -231,8 +239,8 @@ class sudoku:
 				board[i,j] = solving_dict[(i,j)][0]
 				# print("i,j", i,j, solving_dict[i,j])
 				# print(board)
-				# raw_input("checkspace 218")
-
+				# input("checkspace 218")
+				i,j,board, solving_dict = self.checkspace(i,j, board, solving_dict)
 				board, solving_dict = self.every_space(board, solving_dict)
 			#if there is already a solution, update the sudoku board a
 			#and check every space of the board again. 
@@ -241,16 +249,18 @@ class sudoku:
 		for i in range(9):
 			for j in range(9):
 				i,j,board, solving_dict = self.checkspace(i,j, board, solving_dict)
+
 		return board, solving_dict			
-	def r_table(self, board, solving_dict):
-	
+	def r_table(self,i, board, solving_dict):
+		
 		board, solving_dict = self.every_space(board, solving_dict)
+
 		temp = []
 		#this initializes the list of the values of potential solutions for a row
 		empty_space = []
 		#this initializes the list of values of the location of the column
 		#in the truth table. 
-		a_len = len(np.where(board[self.i,:] < 1)[0])
+		a_len = len(np.where(board[i,:] < 1)[0])
 		#finds how many solutions NEED to be found in the row 
 		#how: records the indexes of zero integers in the row and store in list
 		#finds the length of that list. 
@@ -259,9 +269,9 @@ class sudoku:
 		#with dimensions based on how many solutions need to be found
 		for j in range(9): 
 			#iterate through each space of the row
-			if board[(self.i,j)] == 0:
+			if board[(i,j)] == 0:
 			#if the space has no solution yet
-				temp.extend(solving_dict[(self.i,j)])
+				temp.extend(solving_dict[(i,j)])
 				#record the numbers that are potential solutions for that
 				#whole entire row
 				empty_space.append(j)
@@ -277,9 +287,9 @@ class sudoku:
 		counter = 0
 		for j in range(9):
 		#this section of the code will put the needed 1s into the table
-			if board[(self.i,j)] == 0:
+			if board[(i,j)] == 0:
 			#if space has no solution yet	
-				temp_sol = solving_dict[(self.i,j)]
+				temp_sol = solving_dict[(i,j)]
 				#set the temporary solution equal to what is in the 
 				#solution solving_dict already 
 				
@@ -291,7 +301,7 @@ class sudoku:
 					#this is because the potential solutiosn for the row are in order
 					#for how the columns of the truth table are ordered. 
 					index = np.where(uni == temp_sol[k])
-					# print("i,j", self.i,j, temp_sol)
+					# print("i,j", i,j, temp_sol)
 					# print(uni, "k", k, temp_sol, temp_sol[k], "index", index)
 					#Example:
 						#temp_sol = [1,3,9]
@@ -309,7 +319,7 @@ class sudoku:
 					# print(truth_array)
 					# print("counter", counter)
 					# print("index", index)
-					# raw_input()
+					# input()
 					#sets the appropriate places in the truth table to zerio
 					#if there is already a solution. 	
 					#counter gave us the row, index gives us the column
@@ -324,11 +334,16 @@ class sudoku:
 		#this will output the indices of where there is only one solution
 		#based on the sums of the columns. 
 		# print(one_solution_col, where_one_col)
-		
+		# input("331")
+		# for key in solving_dict:
+		# 	print(key, solving_dict[key])
+		# 	print(self.eliminated_list)
+		# 	input()
+
 		return truth_array, one_solution_col, where_one_col, empty_space, uni, a_len, temp, board, solving_dict
-	def r_table_one(self, board, solving_dict):
+	def r_table_one(self,i, board, solving_dict):
 		#will check for one solution pattern in truth table for row
-		truth_array, one_solution_col, where_one_col, empty_space, uni, a_len, temp, board, solving_dict = self.r_table(board, solving_dict)
+		truth_array, one_solution_col, where_one_col, empty_space, uni, a_len, temp, board, solving_dict = self.r_table(i,board, solving_dict)
 		
 
 		if len(where_one_col[0]) > 0:
@@ -344,12 +359,15 @@ class sudoku:
 				#the actual "j_space" where the solution is 
 				#if there is actually one solution in the truth table:
 				one_sol = uni[where_one_col[0][loc]]
+				
+
 				one_sol_list = [one_sol]
+				print(type(one_sol_list))
 				#the solution that needs to be put on the sudoku board. 
-				board[(self.i, where_one_col_board)] = one_sol
+				board[(i, where_one_col_board)] = one_sol
 				#this is changing the board which needs to be set to an integer
 				#this will set the proper space on the sudoku board to its solution 
-				solving_dict[(self.i,where_one_col_board)] = one_sol_list
+				solving_dict[(i,where_one_col_board)] = one_sol_list
 				#changing the solving_dict so you need to utilize a list. 
 			
 			#updates the solving solving_dict's solutions 
@@ -357,13 +375,15 @@ class sudoku:
 			#the progrma iterates through, it creates a new truth table
 			#based on the changed criteria outlines above. 
 			self.every_space(board,solving_dict)
-			truth_array, one_solution_col, where_one_col, empty_space, uni, a_len, temp, board, solving_dict = self.r_table(board, solving_dict)
+			#input('218')
+			truth_array, one_solution_col, where_one_col, empty_space, uni, a_len, temp, board, solving_dict = self.r_table(i,board, solving_dict)
 
 			# print(board)
 	
 		return a_len, truth_array, empty_space, temp, board, solving_dict 
-	def r_table_pair(self, board, solving_dict):
-		a_len, truth_array, empty_space, temp, board, solving_dict = self.r_table_one(board,solving_dict)	
+	def r_table_pair(self,i, board, solving_dict):
+		
+		a_len, truth_array, empty_space, temp, board, solving_dict = self.r_table_one(i,board,solving_dict)	
 		pair_check_list = []
 		pair_space_where = []
 		for row in range(a_len): 
@@ -375,10 +395,11 @@ class sudoku:
 
 		combination = list(combinations(range(len(pair_check_list)),2))
 		
+		
 		#will output the indexes
 		if len(combination) > 0 and len(combination[0])>1:
 			for combo in combination:
-
+				
 				pair_value_list = []
 				#going to be a list of the pair values!!!!!!!
 				first_row = truth_array[pair_check_list[combo[0]]]
@@ -387,6 +408,7 @@ class sudoku:
 				#uses the .all() because the stuff before it is a list of trues and falses. 
 					non_pair_location = list(empty_space)
 					for r in range(2):
+
 						pair_value_index = np.where(np.array(first_row) == 1)[0][r]
 						pair_value_list.append(temp[pair_value_index])
 						#tells us the physical pair values. 
@@ -398,7 +420,7 @@ class sudoku:
 						#have the pair values in their potential solutions list. 
 					#Go an remove those pair values form the non_pairs
 					for space in range(len(non_pair_location)):
-						removing_space = solving_dict[(self.i,non_pair_location[space])]
+						removing_space = solving_dict[(i,non_pair_location[space])]
 					#so for every space where the pair values need to be removed
 						for v in range(len(pair_value_list)):
 						#iterate through all the values that need to be removed.						
@@ -408,20 +430,24 @@ class sudoku:
 
 					pair_space_where = []
 
+
 					board, solving_dict = self.every_space(board,solving_dict)
+		
+		return board, solving_dict
 		#print(board)
-	def c_table(self, board, solving_dict):
+	def c_table(self, i, board, solving_dict):
+		board, solving_dict = self.every_space(board, solving_dict)
 		reverse_board = np.transpose(board)
 		
 		#this will transpose the oringinal sudoky board so that you can work 
 		#with the columns for the truth array 
-		board, solving_dict = self.every_space(reverse_board, solving_dict)
+		
 		temp = []
 		#this initializes the list of the values of potential solutions for a row
 		empty_space = []
 		#this initializes the list of values of the location of the column
 		#in the truth table. 
-		a_len = len(np.where(reverse_board[self.i,:] < 1)[0])
+		a_len = len(np.where(reverse_board[i,:] < 1)[0])
 		#finds how many solutions NEED to be found in the row 
 		#how: records the indexes of zero integers in the row and store in list
 		#finds the length of that list. 
@@ -431,9 +457,9 @@ class sudoku:
 
 		for j in range(9): 
 			#iterate through each space of the row
-			if reverse_board[(self.i,j)] == 0:
+			if reverse_board[(i,j)] == 0:
 			#if the space has no solution yet
-				temp.extend(solving_dict[(j,self.i)])
+				temp.extend(solving_dict[(j,i)])
 				#record the numbers that are potential solutions for that
 				#whole entire row
 				empty_space.append(j)
@@ -448,9 +474,9 @@ class sudoku:
 		for j in range(9):
 		#iterate through each space in that row. 
 		#this section of the code will put the needed 1s into the table
-			if reverse_board[(self.i,j)] == 0:
+			if reverse_board[(i,j)] == 0:
 			#if space has no solution yet	
-				temp_sol = solving_dict[(j,self.i)]
+				temp_sol = solving_dict[(j,i)]
 				#set the temporary solution equal to what is in the 
 				#solution solving_dict already 
 				for k in range(len(temp_sol)):
@@ -482,8 +508,8 @@ class sudoku:
 		
 		
 		return truth_array, one_solution_col, where_one_col, empty_space, uni, a_len, temp, board, reverse_board, solving_dict
-	def c_table_one (self, board, solving_dict):
-		truth_array, one_solution_col, where_one_col, empty_space, uni, a_len, temp, reverse_board, board, solving_dict = self.c_table(reverse_board, solving_dict)
+	def c_table_one (self, i, board, solving_dict):
+		truth_array, one_solution_col, where_one_col, empty_space, uni, a_len, temp, reverse_board, board, solving_dict = self.c_table(i, board, solving_dict)
 		if len(where_one_col[0]) > 0:
 				#FOR THE DEFINITE ONE SOLUTION based on truth table columns
 				#print("before", board)
@@ -496,21 +522,22 @@ class sudoku:
 				where_one_col_board = empty_space[where_one_row]
 				#if there is actually one solution in the truth table:
 				one_sol = uni[where_one_col[0][loc]]
+				
 				one_sol_list = [one_sol]
-				self.reverse_board[(self.i, where_one_col_board)] = one_sol
+				reverse_board[(i, where_one_col_board)] = one_sol
 				#this will set the proper space on the sudoku board to its solution 
-				solving_dict[(self.i,where_one_col_board)] = one_sol_list
+				solving_dict[(i,where_one_col_board)] = one_sol_list
 				#updates the solving solving_dict's solutions 
 				#remember, no need to revise the truth table because when 
 				#the progrma iterates through, it creates a new truth table
 				#based on the changed criteria outlines above. 
 			
 
-			board, reverse_board, solvingd_dict = self.every_space(board, solving_dict)
-		truth_array, one_solution_col, where_one_col, empty_space, uni, a_len, temp, reverse_board, board, solving_dict = self.c_table(board, solving_dict)			
+			board, reverse_board, solving_dict = self.every_space(breverse_board, solving_dict)
+		truth_array, one_solution_col, where_one_col, empty_space, uni, a_len, temp, reverse_board, board, solving_dict = self.c_table(i, board, solving_dict)			
 		return a_len, truth_array, empty_space, temp, reverse_board, board 
-	def c_table_pair(self, board, solving_dict):	
-		a_len, truth_array, empty_space, temp, reverse_board, solving_dict = self.c_table_one(board, solving_dict)
+	def c_table_pair(self, i, board, solving_dict):	
+		a_len, truth_array, empty_space, temp, reverse_board, solving_dict = self.c_table_one(i, board, solving_dict)
 		pair_check_list = []
 		pair_space_where = []
 		for row in range(a_len):
@@ -535,7 +562,7 @@ class sudoku:
 						
 						non_pair_location = list(empty_space)
 						for r in range(2):
-							# print("i", self.i)
+							# print("i", i)
 							# print(truth_array)
 							# print("combo", combo)
 							# print("temporary solutions", temp)
@@ -566,16 +593,16 @@ class sudoku:
 							#have the pair values in their potential solutions list.
 							# print("r =", r ) 
 							# print("____________________________________________________________")
-							# raw_input()
+							# input()
 
 
 						#Go an remove those pair values form the non_pairs
 						for l in range(len(non_pair_location)):
-							removing_space = solving_dict[(non_pair_location[l], self.i)]
+							removing_space = solving_dict[(non_pair_location[l], i)]
 							# print("the values of the space where pairs need to be removed", removing_space)
 						#so for every space where the pair values need to be removed
 							# print("# in loop", l, removing_space)
-							# raw_input()
+							# input()
 							for v in range(len(pair_value_list)):
 								# print("v =", v, removing_space)
 								# print("pair values", pair_value_list)
@@ -584,22 +611,27 @@ class sudoku:
 								if pair_value_list[v] in removing_space:
 									removing_space.remove(pair_value_list[v])
 									
-									raw_input()
+									input()
 						pair_space_where = []
 
 						
 						board, solving_dict = self.every_space(board, solving_dict)
-			return board, solving_dict
+		return board, solving_dict
 	def initial_screening(self, board, solving_dict):
-		for self.i in range(9):
-			board, solving_dict = self.r_table_pair(board, solving_dict)
-		for self.i in range(9):
-			board, solving_dict = self.c_table_pair(board, solving_dict)
+		for i in range(9):
+			# print(i)
+			# input('600')
+			board, solving_dict = self.r_table_pair(i, board, solving_dict)
+		for i in range(9):
+			board, solving_dict = self.c_table_pair(i, board, solving_dict)
+		
 		board, solving_dict = self.every_space(board, solving_dict)
 		return board, solving_dict
 	def whatif(self, board, solving_dict):
 		#use the most updated board! 
 		board, solving_dict = self.initial_screening(board, solving_dict)
+		print(board)
+		input('627')
 		
 		#Make a copy of the solving solving_dict and sudoku board
 		whatif_board = np.copy(board)
@@ -663,43 +695,44 @@ class sudoku:
 			for key in solving_dict:
 				if key[v] == v:
 					print(key, solving_dict[key])	
-			raw_input()
+			input()
 
 
 
 
 
+if __name__=="__main__":
+	game1 = sudoku()
+	#game1.checkrow(0,1, board, solving_dict)
+	#game1.checkcol(0,1)
+	#game1.checkbox(0,1)
+	#game1.checkspace(8,0)
+	#game1.initialize_dict()
+	#game1.every_space()
+	#game1.r_table()
+	#game1.r_table_one()
+	#game1.r_table_pair()
+	#game1.c_table_one()
+	#game1.c_table_pair()
+	#game1.solve()
+	#game1.solution_check(solving_dict)
+	#game1.initial_screening()
+	board = np.array([
+	 			 [4,0,1,0,5,0,9,0,0]
+				,[3,0,0,9,0,0,0,0,1]
+				,[9,0,2,0,0,1,0,5,0]
+				,[8,0,3,5,6,0,7,0,4]
+				,[5,6,0,7,0,4,0,1,0]
+				,[0,2,4,0,1,3,5,0,0]
+				,[0,0,5,0,0,7,0,4,0]
+				,[0,0,7,0,0,8,0,0,5]
+				,[0,4,0,1,0,5,6,0,7]])
 
-game1 = sudoku()
-#game1.checkrow(0,1, board, solving_dict)
-#game1.checkcol(0,1)
-#game1.checkbox(0,1)
-#game1.checkspace(8,0)
-#game1.initialize_dict()
-#game1.every_space()
-#game1.r_table()
-#game1.r_table_one()
-#game1.r_table_pair()
-#game1.c_table_one()
-#game1.c_table_pair()
-#game1.solve()
-#game1.solution_check(solving_dict)
-#game1.initial_screening()
-board = np.array([
- 			 [4,0,1,0,5,0,9,0,0]
-			,[3,0,0,9,0,0,0,0,1]
-			,[9,0,2,0,0,1,0,5,0]
-			,[8,0,3,5,6,0,7,0,4]
-			,[5,6,0,7,0,4,0,1,0]
-			,[0,2,4,0,1,3,5,0,0]
-			,[0,0,5,0,0,7,0,4,0]
-			,[0,0,7,0,0,8,0,0,5]
-			,[0,4,0,1,0,5,6,0,7]])
-
-solving_dict = {}
-game1.whatif(board,solving_dict)
-#ame1.solve(board, solving_dict)
+	solving_dict = {}
+	board, solving_dict = game1.initialize_dict(board,solving_dict)
+	game1.whatif(board,solving_dict)
+	#ame1.solve(board, solving_dict)
 
 
 
-  
+	  
